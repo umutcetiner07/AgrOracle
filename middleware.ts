@@ -23,7 +23,10 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token
+      authorized: ({ token, req }) => {
+        const pathname = req.nextUrl.pathname
+        return pathname === "/" || pathname === "/farmer" || !!token
+      }
     }
   }
 )
