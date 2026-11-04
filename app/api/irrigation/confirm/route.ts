@@ -21,26 +21,25 @@ export async function POST(req: Request) {
 
     // Veritabanına yazmayı dene; bağlantı yoksa bile süreci kilitleme
     try {
-      let sensorId = 'sensor-almaty-node-1'
       const firstSensor = await prisma.sensor.findFirst()
-      if (firstSensor) sensorId = firstSensor.id
-
-      await prisma.telemetryLog.create({
-        data: {
-          sensorId,
-          soilMoisture: 53.0,
-          battery: 95,
-          irrigationAmount: amountM3,
-          details: {
-            action: 'IRRIGATION_EXECUTED',
-            protocol: 'Bereke-RuleEngine-v1',
-            savedWaterM3,
-            savedAmountKzt,
-            timestamp: verifiedAt,
-            decisionGuardVerified: true,
+      if (firstSensor) {
+        await prisma.telemetryLog.create({
+          data: {
+            sensorId: firstSensor.id,
+            soilMoisture: 53.0,
+            battery: 95,
+            irrigationAmount: amountM3,
+            details: {
+              action: 'IRRIGATION_EXECUTED',
+              protocol: 'Bereke-RuleEngine-v1',
+              savedWaterM3,
+              savedAmountKzt,
+              timestamp: verifiedAt,
+              decisionGuardVerified: true,
+            },
           },
-        },
-      })
+        })
+      }
     } catch (dbError) {
       console.warn('Veritabanı yazma atlandı, fallback log döndürülüyor:', dbError)
     }

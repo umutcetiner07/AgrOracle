@@ -1,11 +1,1 @@
-{
-  "buildCommand": "prisma generate && next build",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "regions": ["iad1"],
-  "git": {
-    "deploymentEnabled": {
-      "master": true
-    }
-  }
-}
+{}
