@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
 
 export interface WaterSavingsInput {
   farmId: number
@@ -35,7 +35,7 @@ export class WaterSavingsService {
     })
     
     if (!farm) {
-      throw new Error("Çiftlik bulunamadı")
+      throw new Error(`Çiftlik bulunamadı (ID: ${farmId})`)
     }
 
     // Sensör verilerini analiz et

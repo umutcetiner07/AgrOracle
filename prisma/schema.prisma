@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
- 
 }
 
 datasource db {
@@ -182,6 +181,18 @@ model Sensor {
   tickets       MaintenanceTicket[]
   farm          Farm                @relation(fields: [farmId], references: [id])
   readings      SensorReading[]
+  telemetryLogs TelemetryLog[]
+}
+
+model TelemetryLog {
+  id               String   @id @default(cuid())
+  sensorId         Int
+  soilMoisture     Float
+  battery          Float?
+  irrigationAmount Float
+  details          Json
+  createdAt        DateTime @default(now())
+  sensor           Sensor   @relation(fields: [sensorId], references: [id])
 }
 
 model WaterSaving {
@@ -305,14 +316,14 @@ enum ShadowMode {
 }
 
 model DashboardStats {
-  id            String   @id @default(cuid())
-  totalSavings  Float
-  efficiency    Float
-  activeFarms   Int
-  totalPayment  Float
-  trendData     Json
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  totalSavings Float
+  efficiency   Float
+  activeFarms  Int
+  totalPayment Float
+  trendData    Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum FarmerResponse {

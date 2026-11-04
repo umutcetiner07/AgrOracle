@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma"
+﻿import { prisma } from "@/lib/prisma"
 
 export interface AnomalyCheckInput {
   sensorId: number
@@ -26,7 +26,6 @@ export class AnomalyService {
   }> {
     const { sensorId, type } = input
 
-    // Get sensor with farm and region data
     const sensor = await prisma.sensor.findUnique({
       where: { id: sensorId },
       include: { 
@@ -41,7 +40,7 @@ export class AnomalyService {
     })
     
     if (!sensor) {
-      throw new Error("Sensor not found")
+      throw new Error(`Sensör bulunamadı (ID: ${input.sensorId})`)
     }
 
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000)
@@ -89,7 +88,6 @@ export class AnomalyService {
       historicalAccuracyFactor
     }
 
-    // Calculate weighted average score
     const weights = {
       rainfallFactor: 0.3,
       neighborAnomalyFactor: 0.25,
@@ -102,7 +100,7 @@ export class AnomalyService {
       return acc + (value * weights[key as keyof ConfidenceScoreFactors])
     }, 0)
 
-    const shouldAlert = score >= 0.6 // 60% threshold
+    const shouldAlert = score >= 0.6
 
     return { score, factors, shouldAlert }
   }
@@ -134,10 +132,6 @@ export class AnomalyService {
           }
         })
 
-        // Simulate SMS notification
-        console.log(`SMS sent to farmer: ${sensor.farm.farmerId} - ${input.description}`)
-        console.log(`Confidence factors:`, factors)
-
         return { anomaly, shouldAlert, score }
       }
     }
@@ -153,6 +147,18 @@ export class AnomalyService {
     farmerId: string, 
     response: 'MANUAL_IRRIGATION' | 'CONFIRMED' | 'NO_RESPONSE'
   ): Promise<any> {
+    const anomaly = await prisma.anomalyLog.findUnique({
+      where: { id: anomalyId }
+    })
+
+    if (!anomaly) {
+      throw new Error(`Anomali kaydı bulunamadı (ID: ${anomalyId})`)
+    }
+
+    if (anomaly.farmerId !== farmerId) {
+      throw new Error("Bu anomaliye yanıt verme yetkiniz yok")
+    }
+
     return await prisma.anomalyLog.update({
       where: { id: anomalyId },
       data: {

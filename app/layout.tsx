@@ -2,26 +2,21 @@ import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
 
-const manrope = Manrope({ subsets: ['latin'] })
+const manrope = Manrope({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-manrope',
+})
 
 export const metadata: Metadata = {
-  title: 'AgroLedger IaaP - Yapay Zeka Destekli Akıllı Sulama',
-  description: 'Kazakistan için geliştirilen AI destekli akıllı sulama ve tedarik zinciri finansmanı ekosistemi. Gerçek zamanlı su tasarrufu takibi ve anomali tespiti.',
-  keywords: ['akıllı sulama', 'yapay zeka', 'su tasarrufu', 'tarım teknolojisi', 'Kazakistan', 'IaaP'],
+  title: 'BerekeLedger | Doğrulanmış Tarım ve Su Kayıt Platformu',
+  description: 'Kazakistan için geliştirilen AI destekli akıllı sulama, veri defteri ve sübvansiyon denetim platformu.',
+  keywords: ['BerekeLedger', 'akıllı sulama', 'su tasarrufu', 'tarım teknolojisi', 'Kazakistan', 'Almaty'],
   authors: [{ name: 'Umut Cetiner' }],
   openGraph: {
-    title: 'AgroLedger IaaP - Yapay Zeka Destekli Akıllı Sulama',
-    description: 'Kazakistan tarımı için geliştirilen AI destekli sulama optimizasyonu platformu',
-    url: 'https://kazakhagro.com',
-    siteName: 'AgroLedger IaaP',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'AgroLedger IaaP Dashboard',
-      },
-    ],
+    title: 'BerekeLedger - Doğrulanmış Tarım ve Su Kayıt Platformu',
+    description: 'Bölgesel su krizine teknoloji tabanlı asimetrik çözüm ve doğrulanmış telemetri defteri.',
+    siteName: 'BerekeLedger',
     locale: 'tr_TR',
     type: 'website',
   },
@@ -33,18 +28,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="tr">
-      <body className={manrope.className}>
+    <html lang="tr" className={manrope.variable}>
+      <body className={`${manrope.className} bg-[#0a0f14] text-white antialiased min-h-screen`}>
         {children}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   )
